@@ -79,6 +79,6 @@ const productSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("Product",productSchema);
+module.exports = mongoose.model("Product",productSchema); //Product will be used in controllers to create product
 
 
