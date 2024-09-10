@@ -12,3 +12,4 @@ console.log(`Database is connected ${data.connection.host}`);
 }
 
 module.exports = connectDatabase
+
