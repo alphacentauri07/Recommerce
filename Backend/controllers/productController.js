@@ -1,6 +1,7 @@
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
+const ApiFeature = require("../utils/apifeature");
 
 /*exports.getAllProduct = async(req,res,next)=>{
 
@@ -11,13 +12,20 @@ const catchAsyncError = require("../middleware/catchAsyncError");
     });
 
 }*/
-
+  
 exports.getAllProduct = catchAsyncError(async (req,res,next)=>{
+    const resultPerPage = 5; // for pagination
+    const productCount = await Product.countDocuments(); // will help in frontend to keep count of products
 
-    const products = await Product.find();
-    res.status(201).json({
+    const apifeature = new ApiFeature(Product.find(),req.query).search().filter().pagination(resultPerPage);        //search feature
+
+    //const products = await Product.find();
+    const products = await apifeature.query;  // we used Product.find in ApiFeature to do regex and the ApiFeature class will return query which we use here
+
+    res.status(200).json({
        success:true,
        products,
+       productCount,
     });
 
 });
@@ -48,6 +56,9 @@ res.status(200).json({
                   // admin only
 exports.createProduct = catchAsyncError(async(req,res,next)=>{
    
+    req.body.user = req.body.id; // we are storing who created product in user
+    
+
     const product = await Product.create(req.body);
     res.status(201).json({
         success:true,
