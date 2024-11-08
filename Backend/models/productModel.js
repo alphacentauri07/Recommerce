@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
     name:{
     type:String,
     required:[true,"please enter product name"]
-     },
+     }, 
 
     description:{
         type:String,
@@ -72,6 +72,12 @@ const productSchema = new mongoose.Schema({
         }
     ],
     
+    user:{       // this will tell which admin has created the product
+      type: mongoose.Schema.ObjectId,
+      ref:"User",
+      required:true
+    },
+
     createdAt:{
         type:Date,
         default:Date.now
