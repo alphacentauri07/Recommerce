@@ -51,7 +51,7 @@ exports.loginUser = catchAsyncError( async(req,res,next)=>{
         return next(new ErrorHandler("Invalid Email or Password",401));
     }
 
-    const isPasswordMatched = user.comparePassword(password); // this compare password function is made in models
+    const isPasswordMatched = await user.comparePassword(password); // this compare password function is made in models
 
     if(!isPasswordMatched){
         return next(new ErrorHandler("Invalid Email or Password",401));
@@ -70,7 +70,7 @@ sendToken(user,200,res);
               
 
 
-// logout user
+// logout user------------------------------------------------------->
 
 exports.logout = catchAsyncError(async(req,res,next)=>{
 
@@ -95,7 +95,7 @@ if(!user){
     return next(new ErrorHandler("User not found" ,401));
 }
 
-// get reset password token
+// get reset password token via mail -------------------->
 
 const resetToken = user.getResetPasswordToken();
  
@@ -131,7 +131,7 @@ try{
 }
 });
 
-// reseting password 
+// reseting password------------------>
 
 
 exports.resetPassword = catchAsyncError(async(req,res,next)=>{
@@ -161,4 +161,44 @@ user.resetPasswordExpire = undefined;
 await user.save();
 
 sendToken(user,200,res);  // it will do login
+});
+
+
+// get users(admin) detail---------------------->>
+
+exports.getUserDetails = catchAsyncError(async(req,res,next)=>{
+
+    const user = await User.findById(req.user.id);
+
+    // if(!user) their will always be user  
+
+    res.status(200).json({
+        success:true,
+       user
+    });
+
+});
+
+// update user password---------------------------->
+
+exports.updatePassword = catchAsyncError(async(req,res,next)=>{
+
+    const user = await User.findById(req.user.id).select("+password"); // becoz we are also selecting user with password
+
+   const isPasswordMatched = await user.comparePassword(req.body.oldPassword);         // we will verify the oldpassword entered with old password store in db
+
+   if(!isPasswordMatched){
+    return next(new ErrorHandler("Old password is incorrect",400));
+   }
+
+  if(req.body.newPassword !== req.body.confirmPassword){         // if new and confirm new does not match
+    return next(new ErrorHandler("Password does not match",400));
+  }
+
+
+  user.password = req.body.newPassword;   // new password updated
+  await user.save();                         //saved
+  sendToken(user,200,res);                 // login
+
+
 });
