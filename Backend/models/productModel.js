@@ -23,6 +23,7 @@ const productSchema = new mongoose.Schema({
       default:0
     },
 
+    //using cloudnary
     images:[
         {
             public_id:{
@@ -55,6 +56,12 @@ const productSchema = new mongoose.Schema({
 
     reviews:[
         {
+          user:{       // this will tell which admin has created the product
+            type: mongoose.Schema.ObjectId,
+            ref:"User",
+            required:true
+          },
+
       name:{      
        type:String,
     required:[true,"please enter name"]
@@ -64,6 +71,7 @@ const productSchema = new mongoose.Schema({
         type:Number,
         required:true
       },
+      
       comment:{
         type:String,
         required:true

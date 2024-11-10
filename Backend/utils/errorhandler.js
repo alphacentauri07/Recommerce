@@ -9,4 +9,4 @@ constructor(message,statusCode){
     // rather than from where the Error object is created.
 }
 }
-module.exports = ErrorHandler
+module.exports = ErrorHandler;

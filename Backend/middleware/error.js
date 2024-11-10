@@ -1,4 +1,5 @@
-const ErrorHandler = require("../middleware/error");
+const ErrorHandler = require("../utils/errorhandler");
+
 
 module.exports = (err,req,res,next)=>{
 

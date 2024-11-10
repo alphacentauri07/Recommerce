@@ -13,6 +13,8 @@ const ApiFeature = require("../utils/apifeature");
 
 }*/
   
+// get all product--------------------->>>>
+
 exports.getAllProduct = catchAsyncError(async (req,res,next)=>{
     const resultPerPage = 5; // for pagination
     const productCount = await Product.countDocuments(); // will help in frontend to keep count of products
@@ -29,6 +31,8 @@ exports.getAllProduct = catchAsyncError(async (req,res,next)=>{
     });
 
 });
+
+//get product detail ---------------------->>>>
 
 exports.getProductDetail = catchAsyncError(async(req,res,next)=>{
     
@@ -53,10 +57,11 @@ res.status(200).json({
 
 });
 
-                  // admin only
+// create product----------------------------------->>>>              
+// admin only
 exports.createProduct = catchAsyncError(async(req,res,next)=>{
    
-    req.body.user = req.body.id; // we are storing who created product in user
+    req.body.user = req.user.id; // we are storing who created product in user
     
 
     const product = await Product.create(req.body);
@@ -66,6 +71,9 @@ exports.createProduct = catchAsyncError(async(req,res,next)=>{
     });
 
 });
+
+// update product details -------------------------->>>
+//admin
 
 exports.updateProduct = catchAsyncError(async(req,res,next)=>{
 
@@ -84,6 +92,9 @@ exports.updateProduct = catchAsyncError(async(req,res,next)=>{
 
 });
 
+// delete product------------------------------------------------->>>
+//admin
+
 exports.deleteProduct = catchAsyncError(async(req,res,next)=>{
 
 const product = await Product.findById(req.params.id);
@@ -100,4 +111,101 @@ if(!product){
    })
 });
 
+// create New review or Update the review------------------------------>>>
 
+exports.createProductReview = catchAsyncError(async(req,res,next)=>{
+
+const {rating,comment,productId} = req.body;  // taking input
+
+const review = {                // making an object
+    user:req.user._id,
+    name:req.user.name,
+    rating:Number(rating), 
+    comment,
+};
+
+const product = await Product.findById(productId);
+
+const isReviewed = product.reviews.find(rev=>rev.user.toString()===req.user._id.toString()) // rev is just a variable & we will get user id here
+                                                                //it will check the id in reviews array and id which i provided input
+if(isReviewed){
+    product.reviews.forEach(rev=>{
+      if(rev=>rev.user.toString()===req.user._id.toString())
+        rev.rating=rating,   // updating rating and reviews when we found it
+        rev.comment=comment
+    });
+}
+
+else{       // if id is not found push in array
+product.reviews.push(review);  //reviews is array created in model
+product.numOfReviews = product.reviews.length  // number of reviwes created in model
+}
+   // this is overall review present in model which is avg of all ratings
+  let avg=0;
+  product.rating = product.reviews.forEach(rev=>{
+    avg=avg+rev.rating;
+  })
+
+  product.rating=avg/product.reviews.length; // saving the rating 
+
+  await product.save({validateBeforeSave:false});
+
+  res.status(200).json({
+    success:true
+  });
+
+});
+
+
+// get all review of single product--------------------------------------->>
+
+exports.getProductReview = catchAsyncError(async(req,res,next)=>{
+
+const product = await  Product.findById(req.query.id);  // here we use query instead of params becoz params-> Request: GET /products/123  & query-> Request: GET /products?id=123
+
+if(!product){
+    return next(new ErrorHandler("Product not found",404));
+}
+
+res.status(200).json({
+    success:true,
+    reviews: product.reviews,
+});
+});
+
+// delete review ------------------------------------------------------------>>
+
+exports.deleteReview = catchAsyncError(async(req,res,next)=>{
+
+const product = await Product.findById(req.query.productId);
+
+if(!product){
+    return next(new ErrorHandler("Product not found",404));
+}
+
+const reviews =  product.reviews.filter(rev=> rev._id.toString() !== req.query.id.toString());   //here we will add all the reviews which are not equal to that review we need to delete
+
+let avg=0;
+
+reviews.forEach((rev) =>{
+ avg +=rev.rating;
+});   
+
+const rating = reviews.length === 0 ? 0 : avg / reviews.length;
+const numOfReviews = reviews.length;
+
+ await Product.findByIdAndUpdate(req.query.productId,{
+    reviews,
+    rating,
+    numOfReviews,
+ },
+ {
+    new:true,
+    runValidators:true,
+ });
+
+res.status(200).json({
+    success:true,
+});
+
+}); 
