@@ -8,13 +8,14 @@ const errorMiddleware = require("./middleware/error"); // middleware for errorHa
 
 const product = require("./routes/productRoute"); //routes import
 const user = require("./routes/userRoute");
+const order = require("./routes/orderRoute");
 
 app.use(express.json());
 app.use(cookieParser()); // it is use so that we get token strore in cookie 
 
 app.use("/api/v1/",product); // api use just for product last "/something" will change for other put,update,delete & get
 app.use("/api/v1/",user);
-
+app.use("/api/v1/",order);
 
 app.use(errorMiddleware); //using errorhandlers 
 
