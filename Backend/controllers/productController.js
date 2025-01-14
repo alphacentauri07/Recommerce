@@ -16,18 +16,22 @@ const ApiFeature = require("../utils/apifeature");
 // get all product--------------------->>>>
 
 exports.getAllProduct = catchAsyncError(async (req,res,next)=>{
-    const resultPerPage = 5; // for pagination
-    const productCount = await Product.countDocuments(); // will help in frontend to keep count of products
+
+    const resultPerPage = 6; // for pagination
+    const productsCount = await Product.countDocuments(); // will help in frontend to keep count of products
 
     const apifeature = new ApiFeature(Product.find(),req.query).search().filter().pagination(resultPerPage);        //search feature
 
     //const products = await Product.find();
     const products = await apifeature.query;  // we used Product.find in ApiFeature to do regex and the ApiFeature class will return query which we use here
+     
+   // products = await apifeature.query;
 
     res.status(200).json({
        success:true,
        products,
-       productCount,
+       productsCount,
+       resultPerPage,
     });
 
 });
@@ -129,7 +133,7 @@ const product = await Product.findById(productId);
 const isReviewed = product.reviews.find(rev=>rev.user.toString()===req.user._id.toString()) // rev is just a variable & we will get user id here
                                                                 //it will check the id in reviews array and id which i provided input
 if(isReviewed){
-    product.reviews.forEach(rev=>{
+    product.reviews.forEach((rev) =>{
       if(rev=>rev.user.toString()===req.user._id.toString())
         rev.rating=rating,   // updating rating and reviews when we found it
         rev.comment=comment
@@ -138,7 +142,7 @@ if(isReviewed){
 
 else{       // if id is not found push in array
 product.reviews.push(review);  //reviews is array created in model
-product.numOfReviews = product.reviews.length  // number of reviwes created in model
+product.numOfReviews = product.reviews.length;  // number of reviwes created in model
 }
    // this is overall review present in model which is avg of all ratings
   let avg=0;
