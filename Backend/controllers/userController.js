@@ -4,18 +4,27 @@ const User = require("../models/userModel");
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary");
+
 
 //register user----------------->
 
 exports.registerUser = catchAsyncError( async(req,res,next)=>{
+
+const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: "avatars",
+    width: 150,
+    crop: "scale,"
+});
+
 
 const {name,email,password}=req.body;
 
 const user = await User.create({
       name,email,password,
       avatar:{
-         public_id:"this is sample",
-         url:"url"
+         public_id:myCloud.public_id,
+         url:myCloud.secure_url,
       }
 });
 
@@ -205,14 +214,31 @@ exports.updatePassword = catchAsyncError(async(req,res,next)=>{
 
 // update user detail------------------------------------------------------>>>>
 
-exports.updateProfile = catchAsyncError(async(req,res,next)=>{
-
-const newUserData = {   // we created object so that we can access what need to change
-    name:req.body.name,
-    email:req.body.email,
-}
- // we will add cloudanary later
-
+exports.updateProfile = catchAsyncError(async (req, res, next) => {
+    const newUserData = {
+      name: req.body.name,
+      email: req.body.email,
+    };
+  
+    if (req.body.avatar !== "") {
+      const user = await User.findById(req.user.id);
+  
+      const imageId = user.avatar.public_id;
+  
+      await cloudinary.v2.uploader.destroy(imageId);
+  
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+        crop: "scale",
+      });
+  
+      newUserData.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      }
+    }
+//---------------------------------cloudnary done---------------------------------------------
  const user = await User.findByIdAndUpdate(req.user.id,newUserData,{
 
   new: true,
@@ -223,10 +249,10 @@ const newUserData = {   // we created object so that we can access what need to 
 
 res.status(200).json({
     success:true,
-    user
+});
+ 
 });
 
-});
 
 //get all users(admin)---------------------------------->
 exports.getAllUsers = catchAsyncError(async(req,res,next)=>{
