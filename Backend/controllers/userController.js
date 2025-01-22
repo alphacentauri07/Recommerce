@@ -112,7 +112,7 @@ await user.save({ validateBeforeSave:false});  // we are saving the token value 
 
 //const resetPAsswordUrl = `http://localhost/api/v1/password/reset/${resetToken}` // becoz using on local host
 
-const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}`;
+const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
 
 const message = `Your password reset Token is: \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it`;
 

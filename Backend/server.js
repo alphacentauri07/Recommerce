@@ -12,7 +12,7 @@ dotenv.config({path:"Backend/config/config.env"});
 //so that is why we are writing it at top so anything does not miss 
 process.on("uncaughtException",(err)=>{
     console.log(err.message);
-    console,log(`server is shutting down due to uncaught exception error`);
+    console.log(`server is shutting down due to uncaught exception error`);
     process.exit(1); 
 });
 

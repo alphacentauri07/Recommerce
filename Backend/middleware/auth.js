@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel")
 
 
-exports.isAutheticatedUser = catchAsyncError(async(req,res,next)=>{
+exports.isAuthenticatedUser = catchAsyncError(async(req,res,next)=>{
 
 const {token} = req.cookies; //login ke time cookie me store kr liya tha token, but to use this we need "cookie parser" in app.js
                                

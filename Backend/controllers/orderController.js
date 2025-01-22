@@ -32,7 +32,7 @@ const order = await Order.create({
 });
 
 
-res.status(200).json({
+res.status(201).json({
     success:true,
     order,
 });
@@ -58,11 +58,11 @@ res.status(200).json({
 
 exports.myOrders  = catchAsyncError(async(req,res,next)=>{
 
-    const order = await Order.find({user:req.user._id});   // we use filter to just find all orders with logged in user
+    const orders = await Order.find({user:req.user._id});   // we use filter to just find all orders with logged in user
     
     res.status(200).json({
         success:true,
-        order,
+        orders,
     });
     });
 

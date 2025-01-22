@@ -8,7 +8,7 @@ shippingInfo:{
     city:{type:String, required:true},
     state:{type:String, required:true},
     country:{type:String,required:true},
-    pincode:{type:Number,required:true},
+    pinCode:{type:Number,required:true},
     phoneNo:{type:Number,required:true},
 },
 
