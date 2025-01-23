@@ -40,6 +40,7 @@ import UpdateUser from "./component/admin/UpdateUser.js"
 import ProductReviews from "./component/admin/ProductReviews.js"
 import Contact from './component/Layout/Contact/Contact.js';
 import About from './component/Layout/About/About.js';
+import NotFound from "./component/Layout/Not Found/NotFound.js";
 
 
 function App() {
@@ -100,7 +101,7 @@ const [stripeApiKey, setStripeApiKey] = useState("");
           <Route path="/cart" element={<Cart/>}/>
           <Route path="/shipping" element={<Shipping/>}/>
           <Route path="/order/confirm" element={<ConfirmOrder/>}/>
-          {stripeApiKey && ( <Route path="/process/payment" element={<Elements stripe={loadStripe(stripeApiKey)}><Payment/></Elements>}/>)}
+
           <Route path="/success" element={<OrderSuccess/>}/>
           <Route path="/orders" element={<MyOrders/>}/>
           <Route path="/order/:id" element={<OrderDetails/>}/>
@@ -120,7 +121,9 @@ const [stripeApiKey, setStripeApiKey] = useState("");
 
         </Route>
 
+        {stripeApiKey && ( <Route path="/process/payment" element={<Elements stripe={loadStripe(stripeApiKey)}><Payment/></Elements>}/>)}
 
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Router>
