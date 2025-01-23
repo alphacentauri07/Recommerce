@@ -38,6 +38,8 @@ import ProcessOrder from './component/admin/ProcessOrder.js';
 import UsersList from './component/admin/UsersList.js';
 import UpdateUser from "./component/admin/UpdateUser.js"
 import ProductReviews from "./component/admin/ProductReviews.js"
+import Contact from './component/Layout/Contact/Contact.js';
+import About from './component/Layout/About/About.js';
 
 
 function App() {
@@ -77,6 +79,8 @@ const [stripeApiKey, setStripeApiKey] = useState("");
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<LoginSignUp />} />
         <Route path="/password/forgot" element={<ForgotPassword/>}/>
         <Route path="/password/reset/:token" element={<ResetPassword/>}/>
