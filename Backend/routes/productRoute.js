@@ -1,11 +1,13 @@
 const express = require("express");
 
-const {getAllProduct,createProduct,updateProduct,deleteProduct,getProductDetail, createProductReview, getProductReview, deleteReview} = require("../controllers/productController");
+const {getAllProduct,createProduct,updateProduct,deleteProduct,getProductDetail, createProductReview, getProductReview, deleteReview, getAdminProducts} = require("../controllers/productController");
 const { isAuthenticatedUser, autorizeRoles } = require("../middleware/auth");
 
 const router = express.Router();
 
 router.route("/products").get(getAllProduct); //isAuthenticated will check, whether user is login or not
+
+router.route("/admin/products").get(isAuthenticatedUser,autorizeRoles("admin"),getAdminProducts);
 
 router.route("/admin/product/new").post(isAuthenticatedUser,autorizeRoles("admin"),createProduct);   // authroles is added as admin for 
  

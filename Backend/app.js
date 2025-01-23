@@ -17,7 +17,7 @@ const user = require("./routes/userRoute");
 const order = require("./routes/orderRoute");
 const payment = require("./routes/paymentRoute");
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser()); // it is use so that we get token strore in cookie 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());

@@ -104,8 +104,10 @@ exports.myOrders  = catchAsyncError(async(req,res,next)=>{
 
     //orderItems is array so we apply for each  and we need to modify stock so we need product id and product quantity
    //using order id modify that order ids orderItems array
+   if (req.body.status === "Shipped") {
    for (const item of order.orderItems) {
     await updateStock(item.product, item.quantity); // here item.product is product id
+}
 }
 
    order.orderStatus = req.body.status; // order status which is processed will update to shipped/delivered
