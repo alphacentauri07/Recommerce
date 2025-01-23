@@ -29,7 +29,15 @@ import { loadStripe } from "@stripe/stripe-js";
 import OrderSuccess from './component/Cart/OrderSuccess.js'
 import MyOrders from "./component/Order/MyOrder.js"
 import OrderDetails from "./component/Order/OrderDetails.js"
-
+import Dashboard from "./component/admin/Dashboard.js"
+import ProductList from "./component/admin/ProductList.js"
+import NewProduct from './component/admin/NewProduct.js';
+import UpdateProduct from './component/admin/UpdateProduct.js';
+import OrderList from './component/admin/OrderList.js';
+import ProcessOrder from './component/admin/ProcessOrder.js';
+import UsersList from './component/admin/UsersList.js';
+import UpdateUser from "./component/admin/UpdateUser.js"
+import ProductReviews from "./component/admin/ProductReviews.js"
 
 
 function App() {
@@ -93,6 +101,22 @@ const [stripeApiKey, setStripeApiKey] = useState("");
           <Route path="/orders" element={<MyOrders/>}/>
           <Route path="/order/:id" element={<OrderDetails/>}/>
         </Route>
+
+        /* Admin Routes */
+        <Route element={<ProtectedRoute isAdmin={true} />}>
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/products" element={<ProductList/>} />
+          <Route path="/admin/product" element={<NewProduct/>} />
+          <Route path="/admin/product/:id" element={<UpdateProduct/>} />
+          <Route path="/admin/orders" element={<OrderList/>} />
+          <Route path="/admin/order/:id" element={<ProcessOrder/>} />
+          <Route path="/admin/users" element={<UsersList/>} />
+          <Route path="/admin/user/:id" element={<UpdateUser/>} />
+          <Route path="/admin/reviews" element={<ProductReviews/>} />
+
+        </Route>
+
+
       </Routes>
       <Footer />
     </Router>

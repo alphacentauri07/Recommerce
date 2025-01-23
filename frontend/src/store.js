@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {thunk} from "redux-thunk";
-import { newReviewReducer, productDetailsReducer, productsReducer } from "./reducers/productReducer";
-import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/userReducer";
+import { newProductReducer, newReviewReducer, productDetailsReducer, productReducer, productReviewsReducer, productsReducer, reviewReducer } from "./reducers/productReducer";
+import { allUsersReducer, forgotPasswordReducer, profileReducer, userDetailsReducer, userReducer } from "./reducers/userReducer";
 import { cartReducer } from "./reducers/cartReducer";
-import { myOrdersReducer, newOrderReducer, orderDetailsReducer } from "./reducers/orderReducer";
+import { allOrdersReducer, myOrdersReducer, newOrderReducer, orderDetailsReducer, orderReducer } from "./reducers/orderReducer";
 
 
 let initialState = {
@@ -15,6 +15,7 @@ let initialState = {
       ? JSON.parse(localStorage.getItem("shippingInfo"))
       : {},
   },
+
 };
 
 
@@ -30,6 +31,14 @@ const store = configureStore({
    myOrders:myOrdersReducer,
    orderDetails:orderDetailsReducer,
    newReview:newReviewReducer,
+   newProduct:newProductReducer,
+   product:productReducer,
+   allOrders:allOrdersReducer,
+   order:orderReducer,
+   allUsers:allUsersReducer,
+   userDetails:userDetailsReducer,
+   productReviews:productReviewsReducer,
+   review:reviewReducer,
   },
   preloadedState: initialState,
   middleware: (getDefaultMiddleware) =>
