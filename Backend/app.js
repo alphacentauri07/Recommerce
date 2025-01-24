@@ -5,11 +5,13 @@ const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-
+const path = require("path");
 
 const errorMiddleware = require("./middleware/error"); // middleware for errorHandler import
 
-dotenv.config({path:"Backend/config/config.env"});
+if (process.env.NODE_ENV !== "PRODUCTION") {
+  require("dotenv").config({ path: "backend/config/config.env" });
+}
 
 
 const product = require("./routes/productRoute"); //routes import
@@ -27,6 +29,11 @@ app.use("/api/v1/",product); // api use just for product last "/something" will 
 app.use("/api/v1/",user);
 app.use("/api/v1/",order);
 app.use("/api/v1/",payment);
+
+app.use(express.static(path.join(__dirname,"../frontend/build")));
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+  });
 
 app.use(errorMiddleware); //using errorhandlers 
 
